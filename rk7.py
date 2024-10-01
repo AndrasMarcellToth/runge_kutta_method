@@ -22,18 +22,19 @@ def f(t, y, b, A, w0, wd):
 
 
 ampl = []
-wd = np.linspace(0*w0, 2*w0, 100)
+wd = np.linspace(0, 2*w0, 100)
 
-for ahh in wd:
-    lfun = lambda t, y, : f(t, y, b, A, w0, ahh)
+for i in wd:
+    lfun = lambda t, y, : f(t, y, b, A, w0, i)
     
     results = integrate.solve_ivp(fun=lfun, t_span=(t0, tf), y0=y0, method="RK45", t_eval=t)
     t = results.t
     x = results.y[0]
     v = results.y[1]
-    ampl.append((max(x)-min(x))/2)
+    x_trunc = x[int(len(x)*0.8):]
+    ampl.append((max(x_trunc)-min(x_trunc))/2)
 
-fig=Figure(x_label="t", y_label="x")
-fig.plot(wd, ampl, ms=3, c='k', m='', ls='-')
+fig=Figure(x_label=r"$\omega_0$ (rad/s)", y_label="Amplitude (m)")
+fig.plot(wd, ampl, lw=0.7, c='k', m='', ls='-')
 
 

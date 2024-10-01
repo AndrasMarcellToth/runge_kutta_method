@@ -6,7 +6,7 @@ from scipy import integrate
 
 y0 = np.array([0, 1])
 t0 = 0
-tf = 100
+tf = 150
 n = 1001
 t = np.linspace(t0, tf, n)
 w0 = 1
@@ -20,15 +20,19 @@ def f(t, y, b, A, w0, wd):
     dv = -b*v - w0**2 * x - A*np.sin(wd*t)
     return np.array([dx, dv])
 
-lfun = lambda t, y, : f(t, y, b, A, w0, wd)
 
-fig=Figure(x_label="t", y_label="x")
 
-results = integrate.solve_ivp(fun=lfun, t_span=(t0, tf), y0=y0, method="RK45", t_eval=t)
-t = results.t
-x = results.y[0]
-v = results.y[1]
+fig=Figure(x_label="Time (s)", y_label="Displacement (m)")
 
-fig.plot(t, x, ms=3, c='k', m='', ls='-')
 
+for i in [0.7, 0.1, 10]:
+    lfun = lambda t, y, : f(t, y, b, A, w0, i)
+    results = integrate.solve_ivp(fun=lfun, t_span=(t0, tf), y0=y0, method="RK45", t_eval=t)
+    t = results.t
+    x = results.y[0]
+    v = results.y[1]
+    fig.plot(t, x, lw=0.7, c=None, m='', ls='-', label=r"$\omega_d$="+f"{i}")
+
+fig.legend()
+fig.save("r6.svg")
 

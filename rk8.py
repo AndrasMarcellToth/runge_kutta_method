@@ -24,21 +24,22 @@ def f(t, y, b, A, w0, wd):
 
 wd = np.linspace(0*w0, 2*w0, 100)
 b = [0.05, 0.1, 0.2, 0.5, 1]
-fig=Figure(x_label="Driving Frequency", y_label="Amplitude", x_min=wd[0], x_max=wd[(len(wd)-1)], y_min=0, y_max=18)
-for bahh in b:
+fig=Figure(x_label=r"$\omega_d$ (rad/s)", y_label="Amplitude (m)")
+for j in b:
     ampl = []
-    for ahh in wd:
-        lfun = lambda t, y, : f(t, y, bahh, A, w0, ahh)
+    for i in wd:
+        lfun = lambda t, y, : f(t, y, j, A, w0, i)
         
         results = integrate.solve_ivp(fun=lfun, t_span=(t0, tf), y0=y0, method="RK45", t_eval=t)
         t = results.t
         x = results.y[0]
         v = results.y[1]
-        ampl.append((max(x)-min(x))/2)
-    fig.plot(wd, ampl, ms=3, c=None, m='', ls='-', label=f"b = {bahh}")
+        x_trunc = x[int(len(x)*0):]
+        ampl.append((max(x_trunc)-min(x_trunc))/2)
+    fig.plot(wd, ampl, lw=0.7, c=None, m='', ls='-', label=f"b = {j}")
 
 fig.legend()
 
-
+fig.save("r8.svg")
 
 
